@@ -18,7 +18,7 @@ class NodeWithSize extends Node {
   ///
   ///     // Position myNode from is middle top
   ///     myNode.pivot = new Point(0.5, 0.0);
-  Offset pivot;
+  Offset? pivot;
 
   /// Creates a new NodeWithSize.
   ///
@@ -46,9 +46,9 @@ class NodeWithSize extends Node {
   ///       canvas.restore();
   ///     }
   void applyTransformForPivot(Canvas canvas) {
-    if (pivot.dx != 0 || pivot.dy != 0) {
-      double pivotInPointsX = size.width * pivot.dx;
-      double pivotInPointsY = size.height * pivot.dy;
+    if (pivot!.dx != 0 || pivot!.dy != 0) {
+      double pivotInPointsX = size.width * pivot!.dx;
+      double pivotInPointsY = size.height * pivot!.dy;
       canvas.translate(-pivotInPointsX, -pivotInPointsY);
     }
   }
@@ -56,8 +56,8 @@ class NodeWithSize extends Node {
   @override
   bool isPointInside (Offset nodePoint) {
 
-    double minX = -size.width * pivot.dx;
-    double minY = -size.height * pivot.dy;
+    double minX = -size.width * pivot!.dx;
+    double minY = -size.height * pivot!.dy;
     double maxX = minX + size.width;
     double maxY = minY + size.height;
     return (nodePoint.dx >= minX && nodePoint.dx < maxX &&

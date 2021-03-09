@@ -9,8 +9,8 @@ part of spritewidget;
 class Label extends Node {
   /// Creates a new Label with the provided [text] and [textStyle].
   Label(this._text, {
-    TextStyle textStyle,
-    TextAlign textAlign
+    TextStyle? textStyle,
+    TextAlign? textAlign
   }) : _textStyle = textStyle ?? const TextStyle(),
        textAlign = textAlign ?? TextAlign.left;
 
@@ -20,6 +20,7 @@ class Label extends Node {
   set text(String text) {
     _text = text;
     _painter = null;
+    _width = null;
   }
 
   /// The style to draw the text in.
@@ -33,8 +34,8 @@ class Label extends Node {
   /// How the text should be aligned horizontally.
   TextAlign textAlign;
 
-  TextPainter _painter;
-  double _width;
+  TextPainter? _painter;
+  double? _width;
 
   @override
   void paint(Canvas canvas) {
@@ -43,16 +44,16 @@ class Label extends Node {
         text: new TextSpan(style: _textStyle, text: _text),
         textDirection: TextDirection.ltr,
       )..layout();
-      _width = _painter.size.width;
+      _width = _painter!.size.width;
     }
 
     Offset offset = Offset.zero;
     if (textAlign == TextAlign.center) {
-      offset = new Offset(-_width / 2.0, 0.0);
+      offset = new Offset(-_width! / 2.0, 0.0);
     } else if (textAlign == TextAlign.right) {
-      offset = new Offset(-_width, 0.0);
+      offset = new Offset(-_width!, 0.0);
     }
 
-    _painter.paint(canvas, offset);
+    _painter!.paint(canvas, offset);
   }
 }

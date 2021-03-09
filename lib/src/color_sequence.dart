@@ -10,29 +10,31 @@ part of spritewidget;
 /// the list. Both lists have the same number of elements.
 class ColorSequence {
   /// List of colors.
-  List<Color> colors;
+  List<Color>? colors;
 
   /// List of color stops, normalized values (0.0 to 1.0) and ordered.
-  List<double> colorStops;
+  List<double>? colorStops;
 
   /// Creates a new color sequence from a list of [colors] and a list of
   /// [colorStops].
   ColorSequence(this.colors, this.colorStops) {
     assert(colors != null);
     assert(colorStops != null);
-    assert(colors.length == colorStops.length);
+    assert(colors!.length == colorStops!.length);
   }
 
   /// Creates a new color sequence from a start and an end color.
   ColorSequence.fromStartAndEndColor(Color start, Color end) {
     colors = <Color>[start, end];
     colorStops = <double>[0.0, 1.0];
+    colorStops = null;
+    colors = null;
   }
 
   /// Creates a new color sequence by copying an existing sequence.
   ColorSequence.copy(ColorSequence sequence) {
-    colors = new List<Color>.from(sequence.colors);
-    colorStops = new List<double>.from(sequence.colorStops);
+    colors = new List<Color>.from(sequence.colors!);
+    colorStops = new List<double>.from(sequence.colorStops!);
   }
 
   /// Returns the color at a normalized (0.0 to 1.0) position in the color
@@ -41,14 +43,14 @@ class ColorSequence {
   Color colorAtPosition(double pos) {
     assert(pos >= 0.0 && pos <= 1.0);
 
-    if (pos == 0.0) return colors[0];
+    if (pos == 0.0) return colors![0];
 
-    double lastStop = colorStops[0];
-    Color lastColor = colors[0];
+    double lastStop = colorStops![0];
+    Color lastColor = colors![0];
 
-    for (int i = 0; i < colors.length; i++) {
-      double currentStop = colorStops[i];
-      Color currentColor = colors[i];
+    for (int i = 0; i < colors!.length; i++) {
+      double currentStop = colorStops![i];
+      Color currentColor = colors![i];
 
       if (pos <= currentStop) {
         double blend = (pos - lastStop) / (currentStop - lastStop);
@@ -57,7 +59,7 @@ class ColorSequence {
       lastStop = currentStop;
       lastColor = currentColor;
     }
-    return colors[colors.length-1];
+    return colors![colors!.length-1];
   }
 }
 

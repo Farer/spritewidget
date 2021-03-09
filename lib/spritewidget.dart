@@ -31,7 +31,6 @@ part 'src/nine_slice_sprite.dart';
 part 'src/node.dart';
 part 'src/node3d.dart';
 part 'src/node_with_size.dart';
-part 'src/particle_system.dart';
 part 'src/sprite.dart';
 part 'src/sprite_box.dart';
 part 'src/sprite_widget.dart';

@@ -45,12 +45,12 @@ class ConstraintRotationToMovement extends Constraint {
 
   /// The filter factor used when constraining the rotation of the node. Valid
   /// values are in the range 0.0 to 1.0
-  final double dampening;
+  final double? dampening;
 
   /// The base rotation will be added to a the movement vectors rotation.
   final double baseRotation;
 
-  Offset _lastPosition;
+  Offset? _lastPosition;
 
   @override
   void preUpdate(Node node, double dt) {
@@ -63,10 +63,10 @@ class ConstraintRotationToMovement extends Constraint {
     if (_lastPosition == node.position) return;
 
     // Get the target angle
-    Offset offset = node.position - _lastPosition;
+    Offset offset = node.position - _lastPosition!;
     double target = degrees(GameMath.atan2(offset.dy, offset.dx)) + baseRotation;
 
-    node.rotation = _dampenRotation(node.rotation, target, dampening);
+    node.rotation = _dampenRotation(node.rotation, target, dampening!);
   }
 }
 
@@ -84,12 +84,12 @@ class ConstraintRotationToNodeRotation extends Constraint {
 
   /// The filter factor used when constraining the rotation of the node. Valid
   /// values are in the range 0.0 to 1.0
-  final double dampening;
+  final double? dampening;
 
   @override
   void constrain(Node node, double dt) {
     double target = targetNode.rotation + baseRotation;
-    node.rotation = _dampenRotation(node.rotation, target, dampening);
+    node.rotation = _dampenRotation(node.rotation, target, dampening!);
   }
 }
 
@@ -110,7 +110,7 @@ class ConstraintRotationToNode extends Constraint {
 
   /// The filter factor used when constraining the rotation of the node. Valid
   /// values are in the range 0.0 to 1.0
-  final double dampening;
+  final double? dampening;
 
   @override
   void constrain(Node node, double dt) {
@@ -130,7 +130,7 @@ class ConstraintRotationToNode extends Constraint {
 
     double target = degrees(GameMath.atan2(offset.dy, offset.dx)) + baseRotation;
 
-    node.rotation = _dampenRotation(node.rotation, target, dampening);
+    node.rotation = _dampenRotation(node.rotation, target, dampening!);
   }
 }
 
@@ -150,7 +150,7 @@ class ConstraintPositionToNode extends Constraint {
   final Offset offset;
 
   /// Dampening used when following the [targetNode], value between 0.0 and 1.0.
-  final double dampening;
+  final double? dampening;
 
   @override
   void constrain(Node node, double dt) {
@@ -173,6 +173,6 @@ class ConstraintPositionToNode extends Constraint {
     if (dampening == null)
       node.position = targetPosition;
     else
-      node.position = GameMath.filterPoint(node.position, targetPosition, dampening);
+      node.position = GameMath.filterPoint(node.position, targetPosition, dampening!);
   }
 }

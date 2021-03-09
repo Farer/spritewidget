@@ -40,7 +40,7 @@ class EffectLine extends Node {
   EffectLine({
     this.texture,
     this.transferMode: BlendMode.dstOver,
-    List<Offset> points,
+    List<Offset>? points,
     this.widthMode : EffectLineWidthMode.linear,
     this.minWidth: 10.0,
     this.maxWidth: 10.0,
@@ -52,7 +52,7 @@ class EffectLine extends Node {
     this.fadeAfterDelay,
     this.textureLoopLength,
     this.simplify: true,
-    ColorSequence colorSequence
+    ColorSequence? colorSequence
   }) {
     if (points == null)
       this.points = <Offset>[];
@@ -67,14 +67,17 @@ class EffectLine extends Node {
       );
     }
 
+    _widths = null;
+    _painter = null;
+    _colorSequence = null;
     _offset = scrollStart;
 
-    _painter = new TexturedLinePainter(points, _colors, _widths, texture);
-    _painter.textureLoopLength = textureLoopLength;
+    _painter = new TexturedLinePainter(points!, _colors!, _widths!, texture!);
+    _painter!.textureLoopLength = textureLoopLength!;
   }
 
   /// The texture used to draw the line.
-  final SpriteTexture texture;
+  final SpriteTexture? texture;
 
   /// The transfer mode used to draw the line, default is
   /// [TransferMode.dstOver].
@@ -101,46 +104,46 @@ class EffectLine extends Node {
   final double scrollSpeed;
 
   /// Color gradient used to draw the line, from start to finish.
-  ColorSequence get colorSequence => _colorSequence;
+  ColorSequence get colorSequence => _colorSequence!;
 
-  ColorSequence _colorSequence;
+  ColorSequence? _colorSequence;
 
   /// List of points that make up the line. Typically, you will only want to
   /// set this at the beginning. Then use [addPoint] to add additional points
   /// to the line.
-  List<Offset> get points => _points;
+  List<Offset> get points => _points!;
 
   set points(List<Offset> points) {
     _points = points;
     _pointAges = <double>[];
-    for (int i = 0; i < _points.length; i++) {
-      _pointAges.add(0.0);
+    for (int i = 0; i < _points!.length; i++) {
+      _pointAges!.add(0.0);
     }
   }
 
-  List<Offset> _points;
+  List<Offset>? _points;
 
-  List<double> _pointAges;
-  List<Color> _colors;
-  List<double> _widths;
+  List<double>? _pointAges;
+  List<Color>? _colors;
+  List<double>? _widths;
 
   /// The time it takes for an added point to fade out. It's total life time is
   /// [fadeDuration] + [fadeAfterDelay].
-  final double fadeDuration;
+  final double? fadeDuration;
 
   /// The time it takes until an added point starts to fade out.
-  final double fadeAfterDelay;
+  final double? fadeAfterDelay;
 
   /// The length, in points, that the texture is stretched to. If the
   /// textureLoopLength is shorter than the line, the texture will be looped.
-  final double textureLoopLength;
+  final double? textureLoopLength;
 
   /// True if the line should be simplified by removing points that are close
   /// to other points. This makes drawing faster, but can result in a slight
   /// jittering effect when points are added.
   final bool simplify;
 
-  TexturedLinePainter _painter;
+  TexturedLinePainter? _painter;
   double _offset = 0.0;
 
   @override
@@ -156,22 +159,22 @@ class EffectLine extends Node {
     // Update age of line points and remove if neccesasry
     if (fadeDuration != null && fadeAfterDelay != null) {
       // Increase age of points
-      for (int i = _points.length - 1; i >= 0; i--) {
-        _pointAges[i] += dt;
+      for (int i = _points!.length - 1; i >= 0; i--) {
+        _pointAges![i] += dt;
       }
 
       // Check if the first/oldest point should be removed
-      while(_points.length > 0 && _pointAges[0] > (fadeDuration + fadeAfterDelay)) {
+      while(_points!.length > 0 && _pointAges![0] > (fadeDuration! + fadeAfterDelay!)) {
         // Update scroll if it isn't the last and only point that is about to removed
-        if (_points.length > 1 && textureLoopLength != null) {
-          double dist = GameMath.distanceBetweenPoints(_points[0], _points[1]);
-          _offset = (_offset - (dist / textureLoopLength)) % 1.0;
+        if (_points!.length > 1 && textureLoopLength != null) {
+          double dist = GameMath.distanceBetweenPoints(_points![0], _points![1]);
+          _offset = (_offset - (dist / textureLoopLength!)) % 1.0;
           if (_offset < 0.0) _offset += 1;
         }
 
         // Remove the point
-        _pointAges.removeAt(0);
-        _points.removeAt(0);
+        _pointAges!.removeAt(0);
+        _points!.removeAt(0);
       }
     }
   }
@@ -180,33 +183,33 @@ class EffectLine extends Node {
   void paint(Canvas canvas) {
     if (points.length < 2) return;
 
-    _painter.points = points;
+    _painter!.points = points;
 
     // Calculate colors
-    List<double> stops = _painter.calculatedTextureStops;
+    List<double> stops = _painter!.calculatedTextureStops;
 
     List<Color> colors = <Color>[];
     for (int i = 0; i < stops.length; i++) {
       double stop = stops[i];
-      Color color = _colorSequence.colorAtPosition(stop);
+      Color color = _colorSequence!.colorAtPosition(stop);
 
       if (fadeDuration != null && fadeAfterDelay != null) {
-        double age = _pointAges[i];
-        if (age > fadeAfterDelay) {
-          double fade = 1.0 - (age - fadeAfterDelay) / fadeDuration;
+        double age = _pointAges![i];
+        if (age > fadeAfterDelay!) {
+          double fade = 1.0 - (age - fadeAfterDelay!) / fadeDuration!;
           int alpha = (color.alpha * fade).toInt().clamp(0, 255);
           color = new Color.fromARGB(alpha, color.red, color.green, color.blue);
         }
       }
       colors.add(color);
     }
-    _painter.colors = colors;
+    _painter!.colors = colors;
 
     // Calculate widths
     List<double> widths = <double>[];
     for (int i = 0; i < stops.length; i++) {
       double stop = stops[i];
-      double growth = math.max(widthGrowthSpeed * _pointAges[i], 0.0);
+      double growth = math.max(widthGrowthSpeed * _pointAges![i], 0.0);
       if (widthMode == EffectLineWidthMode.linear) {
         double width = minWidth + (maxWidth - minWidth) * stop + growth;
         widths.add(width);
@@ -215,11 +218,11 @@ class EffectLine extends Node {
         widths.add(width);
       }
     }
-    _painter.widths = widths;
+    _painter!.widths = widths;
 
-    _painter.textureStopOffset = _offset;
+    _painter!.textureStopOffset = _offset;
 
-    _painter.paint(canvas);
+    _painter!.paint(canvas);
   }
 
   /// Adds a new point to the end of the line.
@@ -241,13 +244,13 @@ class EffectLine extends Node {
 
       // If the point is on the line, remove it
       if (dist2 < 1.0) {
-        _points.removeAt(_points.length - 1);
+        _points!.removeAt(_points!.length - 1);
       }
     }
 
     // Add point and point's age
-    _points.add(point);
-    _pointAges.add(0.0);
+    _points!.add(point);
+    _pointAges!.add(0.0);
   }
 
   double _sqr(double x) => x * x;

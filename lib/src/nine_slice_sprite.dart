@@ -18,6 +18,9 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
     pivot = const Offset(0.5, 0.5);
     this.texture = texture;
     this.insets = insets;
+    _texture = null;
+    _textureCoordinates = null;
+    _insets = null;
   }
 
   /// Creates a new NineSliceSprite from the provided [image], [size], and
@@ -28,9 +31,9 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
   /// The texture that the sprite will render to screen. Cannot be null.
   ///
   ///     my9Sprite.texture = myTexture;
-  SpriteTexture get texture => _texture;
+  SpriteTexture get texture => _texture!;
 
-  SpriteTexture _texture;
+  SpriteTexture? _texture;
 
   set texture(SpriteTexture texture) {
     _texture = texture;
@@ -49,9 +52,9 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
 
   /// The insets of the texture as normalized values. The insets define the
   /// areas of the texture that will not be deformed as the sprite stretches.
-  EdgeInsets get insets => _insets;
+  EdgeInsets get insets => _insets!;
 
-  EdgeInsets _insets;
+  EdgeInsets? _insets;
 
   set insets(EdgeInsets insets) {
     assert(insets != null);
@@ -82,10 +85,10 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
 
   // Cached values.
   bool _isDirty = true;
-  List<Offset> _vertices;
-  List<Offset> _textureCoordinates;
-  List<Color> _colors;
-  List<int> _indices;
+  List<Offset>? _vertices;
+  List<Offset>? _textureCoordinates;
+  List<Color>? _colors;
+  List<int>? _indices;
 
   @override
   void paint(Canvas canvas) {
@@ -109,8 +112,8 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
       _colors = <Color>[];
 
       for (int y = 0; y < 4; y += 1) {
-        double vy;
-        double ty;
+        double vy = 0;
+        double ty = 0;
 
         switch(y) {
           case 0:
@@ -132,8 +135,8 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
         }
 
         for (int x = 0; x < 4; x += 1) {
-          double vx;
-          double tx;
+          double vx = 0;
+          double tx = 0;
 
           switch(x) {
             case 0:
@@ -154,9 +157,9 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
               break;
           }
 
-          _vertices.add(new Offset(vx, vy));
-          _textureCoordinates.add(new Offset(tx, ty));
-          _colors.add(const Color(0xffffffff));
+          _vertices!.add(new Offset(vx, vy));
+          _textureCoordinates!.add(new Offset(tx, ty));
+          _colors!.add(const Color(0xffffffff));
         }
       }
 
@@ -171,13 +174,13 @@ class NineSliceSprite extends NodeWithSize with SpritePaint {
           // Add a rectangle (two triangles).
           int index = y * 4 + x;
 
-          _indices.add(index);
-          _indices.add(index + 1);
-          _indices.add(index + 4);
+          _indices!.add(index);
+          _indices!.add(index + 1);
+          _indices!.add(index + 4);
 
-          _indices.add(index + 1);
-          _indices.add(index + 5);
-          _indices.add(index + 4);
+          _indices!.add(index + 1);
+          _indices!.add(index + 5);
+          _indices!.add(index + 4);
         }
       }
     }
