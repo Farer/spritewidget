@@ -468,7 +468,7 @@ class SpriteBox extends RenderBox {
   }
 
   void _addConstrainedNodes(Node node, List<Node> nodes) {
-    if (node._constraints != null && node._constraints!.length > 0) {
+    if (node._constraints != null && node._constraints.length > 0) {
       nodes.add(node);
     }
 
