@@ -256,7 +256,7 @@ class Node {
   bool _assertNonCircularAssignment(Node child) {
     Node node = this;
     while (node.parent != null) {
-      node = node.parent;
+      node = node.parent!;
       assert(node != child); // indicates we are about to create a cycle
     }
     return true;
