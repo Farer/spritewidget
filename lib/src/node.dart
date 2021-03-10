@@ -93,12 +93,12 @@ class Node {
   @Deprecated('actions has been renamed to motions')
   MotionController get actions => motions;
 
-  List<Constraint>? _constraints;
+  List<Constraint> _constraints = <Constraint>[];
 
   /// A [List] of [Constraint]s that will be applied to the node.
   /// The constraints are applied after the [update] method has been called.
   List<Constraint> get constraints {
-    return _constraints!;
+    return _constraints;
   }
 
   set constraints(List<Constraint> constraints) {
@@ -112,7 +112,7 @@ class Node {
   void applyConstraints(double dt) {
     if (_constraints == null) return;
 
-    for (Constraint constraint in _constraints!) {
+    for (Constraint constraint in _constraints) {
       constraint.constrain(this, dt);
     }
   }
