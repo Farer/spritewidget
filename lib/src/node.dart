@@ -132,7 +132,7 @@ class Node {
   ///
   ///     // Hide the parent
   ///     myNode.parent.visible = false;
-  Node get parent => _parent!;
+  Node? get parent => _parent;
 
   /// The rotation of this node in degrees.
   ///
