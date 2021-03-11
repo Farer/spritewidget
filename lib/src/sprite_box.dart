@@ -240,7 +240,7 @@ class SpriteBox extends RenderBox {
     }
 
     // Pass the event down to nodes that were hit by the pointerdown
-    List<Node> targets = entry.nodeTargets!;
+    List<Node>? targets = entry.nodeTargets;
     if(targets==null) return; //JK
     for (Node node in targets) {
       // Check if this event should be dispatched
